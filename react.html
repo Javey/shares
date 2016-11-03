@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>React</title>
+    <link rel="stylesheet" href="bower_components/reveal.js/css/reveal.css"/>
+    <link rel="stylesheet" href="bower_components/reveal.js/css/theme/black.css"/>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h1>React技术分享</h1>
+        </section>
+
+        <section>
+            <h2>内容</h2>
+            <ul>
+                <li>前端框架简介</li>
+                <li>前端模板技术</li>
+                <li>组件设计</li>
+            </ul>
+        </section>
+
+        <section class="stack">
+            <section>
+                <h2>前端框架</h2>
+                <ul>
+                    <li>
+                        <p class="fragment">MVC/MVP</p>
+                        <ul class="fragment"><li>Backbone</li></ul>
+                    </li>
+                    <li>
+                        <p class="fragment">MVVM</p>
+                        <ul class="fragment"><li>Angular/Ember</li></ul>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h2>MV*</h2>
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="processonSvg1000" viewBox="299.0 156.0 422.0 290.0" width="422.0" height="290.0"><defs id="ProcessOnDefs1001"><linearGradient id="ProcessOnLinearGradient1007" x1="0.9469983318002789" y1="0.8200525829494073" x2="0.41197702676439435" y2="0.0"><stop id="ProcessOnStop1008" stop-opacity="1.0" stop-color="#00ff00" offset="0.0"/><stop id="ProcessOnStop1009" stop-opacity="1.0" stop-color="#00b400" offset="1.0"/></linearGradient><linearGradient id="ProcessOnLinearGradient1014" x1="0.9469983318002789" y1="0.8200525829494073" x2="0.41197702676439435" y2="0.0"><stop id="ProcessOnStop1015" stop-opacity="1.0" stop-color="#00ff00" offset="0.0"/><stop id="ProcessOnStop1016" stop-opacity="1.0" stop-color="#00b400" offset="1.0"/></linearGradient><linearGradient id="ProcessOnLinearGradient1021" x1="0.9469983318002789" y1="0.8200525829494073" x2="0.41197702676439435" y2="0.0"><stop id="ProcessOnStop1022" stop-opacity="1.0" stop-color="#00ff00" offset="0.0"/><stop id="ProcessOnStop1023" stop-opacity="1.0" stop-color="#00b400" offset="1.0"/></linearGradient><marker id="ProcessOnMarker1028" markerUnits="userSpaceOnUse" orient="auto" markerWidth="16.23606797749979" markerHeight="10.550836550532098" viewBox="-1.0 -1.3763819204711736 16.23606797749979 10.550836550532098" refX="-1.0" refY="3.8990363547948754"><path id="ProcessOnPath1029" d="M12.0 3.8990363547948754L0.0 7.798072709589751V0.0Z" stroke="#323232" stroke-width="2.0" fill="#323232" transform="matrix(1.0,0.0,0.0,1.0,0.0,0.0)"/></marker><marker id="ProcessOnMarker1032" markerUnits="userSpaceOnUse" orient="auto" markerWidth="16.23606797749979" markerHeight="10.550836550532098" viewBox="-1.0 -1.3763819204711736 16.23606797749979 10.550836550532098" refX="-1.0" refY="3.8990363547948754"><path id="ProcessOnPath1033" d="M12.0 3.8990363547948754L0.0 7.798072709589751V0.0Z" stroke="#323232" stroke-width="2.0" fill="#323232" transform="matrix(1.0,0.0,0.0,1.0,0.0,0.0)"/></marker><marker id="ProcessOnMarker1036" markerUnits="userSpaceOnUse" orient="auto" markerWidth="16.23606797749979" markerHeight="10.550836550532098" viewBox="-1.0 -1.3763819204711736 16.23606797749979 10.550836550532098" refX="-1.0" refY="3.8990363547948754"><path id="ProcessOnPath1037" d="M12.0 3.8990363547948754L0.0 7.798072709589751V0.0Z" stroke="#323232" stroke-width="2.0" fill="#323232" transform="matrix(1.0,0.0,0.0,1.0,0.0,0.0)"/></marker><marker id="ProcessOnMarker1040" markerUnits="userSpaceOnUse" orient="auto" markerWidth="16.23606797749979" markerHeight="10.550836550532098" viewBox="-1.0 -1.3763819204711736 16.23606797749979 10.550836550532098" refX="-1.0" refY="3.8990363547948754"><path id="ProcessOnPath1041" d="M12.0 3.8990363547948754L0.0 7.798072709589751V0.0Z" stroke="#323232" stroke-width="2.0" fill="#323232" transform="matrix(1.0,0.0,0.0,1.0,0.0,0.0)"/></marker></defs><g id="ProcessOnG1002"><path id="ProcessOnPath1003" d="M299.0 156.0H721.0V446.0H299.0V156.0Z" fill="#ffffff"/><g id="ProcessOnG1004"><g id="ProcessOnG1005" transform="matrix(1.0,0.0,0.0,1.0,450.0,176.0)" opacity="1.0"><path id="ProcessOnPath1006" d="M0.0 5.0Q0.0 0.0 5.0 0.0L95.0 0.0Q100.0 0.0 100.0 5.0L100.0 65.0Q100.0 70.0 95.0 70.0L5.0 70.0Q0.0 70.0 0.0 65.0L0.0 5.0Z" stroke="#006400" stroke-width="2.0" stroke-dasharray="none" fill="url(#ProcessOnLinearGradient1007)"/><g id="ProcessOnG1010" transform="matrix(1.0,0.0,0.0,1.0,10.0,23.75)"><text id="ProcessOnText1011" fill="#323232" font-weight="normal" font-style="normal" text-decoration="blink" font-family="Arial,宋体" text-anchor="middle" font-size="18" x="40.0" y="18.45">Model</text></g></g><g id="ProcessOnG1012" transform="matrix(1.0,0.0,0.0,1.0,319.0,356.0)" opacity="1.0"><path id="ProcessOnPath1013" d="M0.0 5.0Q0.0 0.0 5.0 0.0L95.0 0.0Q100.0 0.0 100.0 5.0L100.0 65.0Q100.0 70.0 95.0 70.0L5.0 70.0Q0.0 70.0 0.0 65.0L0.0 5.0Z" stroke="#006400" stroke-width="2.0" stroke-dasharray="none" fill="url(#ProcessOnLinearGradient1014)"/><g id="ProcessOnG1017" transform="matrix(1.0,0.0,0.0,1.0,10.0,23.75)"><text id="ProcessOnText1018" fill="#323232" font-weight="normal" font-style="normal" text-decoration="blink" font-family="Arial,宋体" text-anchor="middle" font-size="18" x="40.0" y="18.45">View</text></g></g><g id="ProcessOnG1019" transform="matrix(1.0,0.0,0.0,1.0,601.0,356.0)" opacity="1.0"><path id="ProcessOnPath1020" d="M0.0 5.0Q0.0 0.0 5.0 0.0L95.0 0.0Q100.0 0.0 100.0 5.0L100.0 65.0Q100.0 70.0 95.0 70.0L5.0 70.0Q0.0 70.0 0.0 65.0L0.0 5.0Z" stroke="#006400" stroke-width="2.0" stroke-dasharray="none" fill="url(#ProcessOnLinearGradient1021)"/><g id="ProcessOnG1024" transform="matrix(1.0,0.0,0.0,1.0,10.0,23.75)"><text id="ProcessOnText1025" fill="#323232" font-weight="normal" font-style="normal" text-decoration="blink" font-family="Arial,宋体" text-anchor="middle" font-size="18" x="40.0" y="18.45">*(P/VM)</text></g></g><g id="ProcessOnG1026"><path id="ProcessOnPath1027" d="M548.904239778555 243.13211781824475L640.7791741408578 344.7007749747125" stroke="#323232" stroke-width="2.0" stroke-dasharray="none" fill="none" marker-end="url(#ProcessOnMarker1028)"/></g><g id="ProcessOnG1030"><path id="ProcessOnPath1031" d="M697.947879140046 356.63815572471543L560.8579493180679 221.68843786627698" stroke="#323232" stroke-width="2.0" stroke-dasharray="none" fill="none" marker-end="url(#ProcessOnMarker1032)"/></g><g id="ProcessOnG1034"><path id="ProcessOnPath1035" d="M601.0 391.0L434.2360679774998 391.0" stroke="#323232" stroke-width="2.0" stroke-dasharray="none" fill="none" marker-end="url(#ProcessOnMarker1036)"/></g><g id="ProcessOnG1038"><path id="ProcessOnPath1039" d="M419.0 414.0L585.7648518805007 412.1674192101044" stroke="#323232" stroke-width="2.0" stroke-dasharray="none" fill="none" marker-end="url(#ProcessOnMarker1040)"/></g></g></g></svg>
+                <ul>
+                    <li class="fragment">View: 视图层，一般为前端模板</li>
+                    <li class="fragment">Model: 数据层，提供数据及数据的操作方法</li>
+                    <li class="fragment">*: 完成数据到视图，视图到数据的更新</li>
+                </ul>
+            </section>
+            <section>
+                <h2>React.js只是一个提供了状态的View层</h2>
+            </section>
+            <section>
+                <img src="http://requirejs.org/i/logo.png"/>
+                <img src="http://jqueryui.com/jquery-wp-content/themes/jquery/images/logo-jquery-ui.png"/>
+                <img src="http://underscorejs.org/docs/images/underscore.png" width="350"/>
+                <img width="200" src="https://rawgit.com/promises-aplus/promises-spec/master/logo.svg"/>
+                <img src="http://learnboost.github.io/stylus/docs/graphics/Logos/stylus.png"/><br />
+                <span style="font-size: 50px; background: rgba(255, 255, 255, 0.12); border: 4px solid #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);">text/template</span>
+            </section>
+            <section>
+                <h2>辅助工具</h2>
+            </section>
+            <section>
+                <h2>一个可靠的本地开发环境</h2>
+                <p class="fragment">Amazing拆分</p>
+                <p class="fragment">引入Nobone</p>
+            </section>
+            <section>
+                <h2>三条命令搞定整个“开发”->“提测”流程</h2>
+                <pre><code>gulp server</code></pre>
+                <pre><code>gulp build</code></pre>
+                <pre><code>gulp test</code></pre>
+            </section>
+            <section>
+                <h2>gulp build做了什么</h2>
+            </section>
+            <section>
+                <h2>一切从加载性能出发</h2>
+                <p class="fragment">代码合并压缩</p>
+                <p class="fragment">自动合图</p>
+                <p class="fragment">解决浏览器缓存问题</p>
+            </section>
+            <section>
+                <h2>自动合图</h2>
+                <div class="fragment">
+                    <img src="static/image/sprite.png" style="vertical-align: middle"/>
+                    <img src="static/image/sprite-css.png" style="vertical-align: middle"/>
+                </div>
+                <div class="fragment" style="margin-top: -236px">
+                    <img src="static/image/imerge.png"/>
+                </div>
+            </section>
+            <section>
+                <h2>解决浏览器缓存</h2>
+                <img class="fragment" src="static/image/original-name.png"/>
+                <img class="fragment" src="static/image/md5.png"/>
+            </section>
+        </section>
+
+        <section class="stack">
+            <section>
+                <h2>工作成果</h2>
+            </section>
+            <section>
+                <h2>业务产出</h2>
+                <img src="static/image/console.png" />
+            </section>
+            <section>
+                <h2>技术产出</h2>
+                <h3 class="fragment">一套前端开发及部署的解决方案</h3>
+                <h3 class="fragment">三个构建工具</h3>
+                <ul>
+                    <li class="fragment">合图工具Imerge<br/><a href="https://github.com/Javey/imerge">https://github.com/Javey/imerge</a></li>
+                    <li class="fragment">静态资源md5化工具nocache<br/><a href="https://github.com/Javey/nocache">https://github.com/Javey/nocache</a></li>
+                    <li class="fragment">js合并工具gulp-document-write<br/><a href="https://github.com/Javey/gulp-document-write">https://github.com/Javey/gulp-document-write</a></li>
+                </ul>
+            </section>
+        </section>
+
+        <section>
+            <section>
+                <h2>还有什么...</h2>
+            </section>
+            <section>
+                <h2>组内分享</h2>
+                <ul class="fragment">
+                    <li>模块化开发</li>
+                    <li>资源按需加载</li>
+                    <li>函数式编程</li>
+                    <li>前端模板</li>
+                    <li>服务器推送技术</li>
+                </ul>
+            </section>
+            <section>
+                <h2>code review</h2>
+                <img src="static/image/code-review.png"/>
+            </section>
+            <section>
+                <h2>webapp技术储备，推广使用react.js</h2>
+            </section>
+        </section>
+
+        <section class="stack">
+            <section>
+                <h2>取得的收获</h2>
+            </section>
+            <section>
+                <h2>成就感</h2>
+            </section>
+        </section>
+
+        <section class="stack">
+            <section>
+                <h2>有待改进的方面</h2>
+            </section>
+            <section>
+                <h2 class="fragment">执行力不够</h2>
+                <h2 class="fragment">项目管理经验不足</h2>
+            </section>
+        </section>
+
+        <section class="stack">
+            <section>
+                <h2>下一步工作计划</h2>
+            </section>
+            <section>
+                <h3>技术</h3>
+                <ul>
+                    <li class="fragment">从工具到平台</li>
+                    <li class="fragment">跨产品线通用组件提取</li>
+                    <li class="fragment">技术调研，如采用BigPipe技术，提高pcweb访问速度</li>
+                    <li class="fragment">webapp</li>
+                </ul>
+            </section>
+            <section>
+                <h3>小组建设</h3>
+                <ul>
+                    <li class="fragment">更多高质量的技术分享</li>
+                    <li class="fragment">不局限于业务开发</li>
+                </ul>
+            </section>
+        </section>
+
+        <section class="stack">
+            <section>
+                <h2>团队建议</h2>
+            </section>
+            <section>
+                <h2>规范流程</h2>
+            </section>
+        </section>
+
+        <section>
+            <h2>谢谢</h2>
+            <h2>Q&A</h2>
+        </section>
+    </div>
+</div>
+
+<script type="text/javascript" src="bower_components/reveal.js/lib/js/head.min.js"></script>
+<script type="text/javascript" src="bower_components/reveal.js/js/reveal.js"></script>
+<script type="text/javascript">
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'slide',
+        dependencies: [
+            { src: 'bower_components/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+            { src: 'bower_components/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            { src: 'bower_components/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            { src: 'bower_components/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+            { src: 'bower_components/reveal.js/plugin/notes/notes.js' }
+        ]
+    });
+</script>
+</body>
+</html>
