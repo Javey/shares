@@ -461,6 +461,58 @@
             </section>
         </section>
 
+        <section class="stack">
+            <section data-markdown>
+                <script type="text/template">
+                    ## 构建单页应用SPA
+
+                    - react-router
+                    <!-- .element: class="fragment" -->
+                        - 实现前端路由
+                    - flux/redux/backbone
+                    <!-- .element: class="fragment" -->
+                        - 实现Model层
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## react-router
+
+                    ```js
+                    import React, {Component} from 'react';
+                    import ReactDom from 'react-dom';
+                    import {Router, Route, hashHistory} from 'react-router';
+                    // 假设存在以下组件
+                    import App from 'app';
+                    import A from 'a';
+                    import B from 'b';
+
+                    ReactDom.render((
+                        <Router history={hashHistory}>
+                            <Route path="/" component={App} />
+                            <Route path="/a" component={A} />
+                            <Route path="/b" component={B} />
+                        </Router>
+                    ), document.getElementById('root'));
+                    ```
+                    <!-- .element: class="fragment" -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## flux
+
+                    - View: 视图层，React组件
+                    - Action: 动作
+                    - Dispatcher: 派发器，连接Action和Store
+                    - Store: 数据层，包含应用的状态和逻辑
+                </script>
+            </section>
+            <section>
+                <img src="static/image/flux.png" />
+            </section>
+        </section>
+
         <section>
             <h2>谢谢</h2>
             <h2>Q&A</h2>
