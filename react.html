@@ -5,6 +5,7 @@
     <title>React</title>
     <link rel="stylesheet" href="bower_components/reveal.js/css/reveal.css"/>
     <link rel="stylesheet" href="bower_components/reveal.js/css/theme/black.css"/>
+    <link rel="stylesheet" href="bower_components/reveal.js/lib/css/zenburn.css"/>
 </head>
 <body>
 <div class="reveal">
@@ -17,8 +18,8 @@
             <h2>内容</h2>
             <ul>
                 <li>前端框架简介</li>
-                <li>前端模板技术</li>
-                <li>组件设计</li>
+                <li>React使用方法</li>
+                <li>TodoList Demo</li>
             </ul>
         </section>
 
@@ -48,144 +49,415 @@
             <section>
                 <h2>React.js只是一个提供了状态的View层</h2>
             </section>
-            <section>
-                <img src="http://requirejs.org/i/logo.png"/>
-                <img src="http://jqueryui.com/jquery-wp-content/themes/jquery/images/logo-jquery-ui.png"/>
-                <img src="http://underscorejs.org/docs/images/underscore.png" width="350"/>
-                <img width="200" src="https://rawgit.com/promises-aplus/promises-spec/master/logo.svg"/>
-                <img src="http://learnboost.github.io/stylus/docs/graphics/Logos/stylus.png"/><br />
-                <span style="font-size: 50px; background: rgba(255, 255, 255, 0.12); border: 4px solid #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);">text/template</span>
-            </section>
-            <section>
-                <h2>辅助工具</h2>
-            </section>
-            <section>
-                <h2>一个可靠的本地开发环境</h2>
-                <p class="fragment">Amazing拆分</p>
-                <p class="fragment">引入Nobone</p>
-            </section>
-            <section>
-                <h2>三条命令搞定整个“开发”->“提测”流程</h2>
-                <pre><code>gulp server</code></pre>
-                <pre><code>gulp build</code></pre>
-                <pre><code>gulp test</code></pre>
-            </section>
-            <section>
-                <h2>gulp build做了什么</h2>
-            </section>
-            <section>
-                <h2>一切从加载性能出发</h2>
-                <p class="fragment">代码合并压缩</p>
-                <p class="fragment">自动合图</p>
-                <p class="fragment">解决浏览器缓存问题</p>
-            </section>
-            <section>
-                <h2>自动合图</h2>
-                <div class="fragment">
-                    <img src="static/image/sprite.png" style="vertical-align: middle"/>
-                    <img src="static/image/sprite-css.png" style="vertical-align: middle"/>
-                </div>
-                <div class="fragment" style="margin-top: -236px">
-                    <img src="static/image/imerge.png"/>
-                </div>
-            </section>
-            <section>
-                <h2>解决浏览器缓存</h2>
-                <img class="fragment" src="static/image/original-name.png"/>
-                <img class="fragment" src="static/image/md5.png"/>
-            </section>
         </section>
-
         <section class="stack">
-            <section>
-                <h2>工作成果</h2>
+            <section data-markdown>
+                <script type="text/template">
+                    ## 环境搭建
+                    1. 安装依赖 <!-- .element: class="fragment" -->
+                        ```bash
+                        // 安装react
+                        npm install react react-dom --save-dev
+                        // 安装babel编译工具
+                        npm install babel-core babel-loader babel-preset-es2005 babel-preset-react --save-dev
+                        // 安装webpack打包工具
+                        npm install webpack --save-dev
+                        ```
+                    2. 定义webpack配置文件 <!-- .element: class="fragment" -->
+                        ```js
+                        module.exports = {
+                            entry: './src/app.js', // 项目入口文件
+                            output: {path: './build', filename: '[name].js'},
+                            module: {
+                                loaders: [{
+                                    test: "/\.js$/", 
+                                    loader: 'babel-loader?cacheDirectory=.cache&presets[]=react&presets[]=es2015'
+                                }]
+                            }
+                        }
+                        ```
+                </script>
             </section>
-            <section>
-                <h2>业务产出</h2>
-                <img src="static/image/console.png" />
+            <section data-markdown>
+                <script type="text/template">
+                    ## Hello React
+                    ```js
+                    // file: src/app.js
+                    import React, {Component} from 'react';
+                    import ReactDom from 'react-dom';
+
+                    class App extends Component {
+                        render() {
+                            return <div>Hello React</div>
+                        }
+                    }
+
+                    ReactDom.render(<App />, document.getElementById('root'));
+                    ```
+                </script>
             </section>
-            <section>
-                <h2>技术产出</h2>
-                <h3 class="fragment">一套前端开发及部署的解决方案</h3>
-                <h3 class="fragment">三个构建工具</h3>
-                <ul>
-                    <li class="fragment">合图工具Imerge<br/><a href="https://github.com/Javey/imerge">https://github.com/Javey/imerge</a></li>
-                    <li class="fragment">静态资源md5化工具nocache<br/><a href="https://github.com/Javey/nocache">https://github.com/Javey/nocache</a></li>
-                    <li class="fragment">js合并工具gulp-document-write<br/><a href="https://github.com/Javey/gulp-document-write">https://github.com/Javey/gulp-document-write</a></li>
-                </ul>
+            <section data-markdown>
+                <script type="text/template">
+                    ## Hello React
+
+                    ```html
+                    <!-- file: src/index.html -->
+                    <!DOCTYPE html>
+                    <html>
+                        <head>
+                            <title>Hello React</title
+                        </head>
+                    <body>
+                        <div id="root"></div>
+                        <script type="text/javascript" src="../build/main.js"><\/script>
+                    </body>
+                    </html>
+                    ```
+
+                    ```bash
+                    webpack --config webpack.config.js
+                    ```
+                    <!-- .element: class="fragment" -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## 通过create-react-app创建应用
+                    ```bash
+                    npm install -g create-react-app
+                    create-react-app hello-world
+                    cd hello-world
+                    npm start
+                    ```
+                </script>
             </section>
         </section>
-
-        <section>
-            <section>
-                <h2>还有什么...</h2>
-            </section>
-            <section>
-                <h2>组内分享</h2>
-                <ul class="fragment">
-                    <li>模块化开发</li>
-                    <li>资源按需加载</li>
-                    <li>函数式编程</li>
-                    <li>前端模板</li>
-                    <li>服务器推送技术</li>
-                </ul>
-            </section>
-            <section>
-                <h2>code review</h2>
-                <img src="static/image/code-review.png"/>
-            </section>
-            <section>
-                <h2>webapp技术储备，推广使用react.js</h2>
-            </section>
-        </section>
-
         <section class="stack">
-            <section>
-                <h2>取得的收获</h2>
+            <section data-markdown>
+                <script type="text/template">
+                    ## jsx
+
+                    jsx是对js语法的扩展，支持标签语法（tag syntax）
+                    <!-- .element: class="fragment" -->
+                    ```js
+                    var element = <h1>Hello</h1>;
+                    ```
+                    <!-- .element: class="fragment" -->
+
+                    1. 输出变量
+                    <!-- .element: class="fragment" -->
+                        ```js
+                        var a = 1;
+                        var element = <h1 id={a}>{a}</h1>;
+                        ```
+                    2. if
+                    <!-- .element: class="fragment" -->
+                        ```js
+                        var element;
+                        if (a === 1) {
+                            element = <h1>one</h1>
+                        } else {
+                            element = <h1>other<h1>
+                        }
+                        ```
+                </script>
             </section>
-            <section>
-                <h2>成就感</h2>
+            <section data-markdown>
+                <script type="text/template">
+                    ## jsx
+
+                    3. 循环
+                    <!-- .element: class="fragment" -->
+                        ```js
+                        var element = <ul>
+                            {[1, 2, 3].map((item) => <li>{item}</li>)}
+                        </ul>
+                        ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## jsx
+                    
+                    {A}：A必须为合法的右值
+
+                    所以并不能在`{}`中写if/for等语句
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## 组件
+
+                    1. 组件需要继承Component，并且实现render方法 <!-- .element: class="fragment" -->
+                        ```js
+                        import React, {Component} from 'react';
+                        
+                        class Hello extends Component {
+                            constructor(props) {
+                                super(props);
+                                this.state = {date: new Date()};
+                                // 每隔1s设置一次date
+                                setInterval(() => {this.setState({date: new Date()})}, 1000);
+                            }
+
+                            render() {
+                                // 实现render方法，返回virtual-dom
+                                return <div>
+                                    Hello {this.props.name}
+                                    <br />
+                                    Now: {this.state.date.toLocaleTimeString()}
+                                </div>
+                            }
+                        }
+                        ```
+                        <!-- .element: class="fragment" -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## 组件
+
+                    2. 通过ReactDom.render渲染组件 <!-- .element: class="fragment" -->
+                        ```js
+                        import ReactDom from 'react-dom';
+                        
+                        ReactDom.render(<Hello name="React"/>, document.getElementById('root'));
+                        ```
+                        <!-- .element: class="fragment" -->
+
+                    3. 组件可以通过props传递数据，该属性是只读的 <!-- .element: class="fragment" -->
+                    4. 组件可以通过state维护自己的状态，该属性是可读写的 <!-- .element: class="fragment" -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## 组件的生命周期
+
+                    生命周期是组件的灵魂 <!-- .element: class="fragment" -->
+
+                    - 组件初始化，到插入dom <!-- .element: class="fragment" -->
+                        1. constructor(props)
+                        2. componentWillMount()
+                        3. render()
+                        4. componentDidMount()
+                    - 组件更新，重新渲染 <!-- .element: class="fragment" -->
+                        1. componentWillReceiveProps()
+                        2. shouldComponentUpdate()
+                        3. componentWillUpdate()
+                        4. render()
+                        5. componentDidUpdate()
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## 组件的生命周期
+
+                    - 组件销毁 <!-- .element: class="fragment" -->
+                        1. componentWillUnmount()
+                    - 销毁Hello React中定时器 <!-- .element: class="fragment" -->
+                        ```js
+                        constructor(props) {
+                            ...
+                            this.timer = setInterval(() => {this.setState({date: new Date()})}, 1000);
+                        }
+
+                        componentWillUnmount() {
+                            clearInterval(this.timer);
+                        }
+                        ```
+                        <!-- .element: class="fragment" -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## 事件处理
+
+                    - 通过onEvent形式的属性绑定事件 <!-- .element: class="fragment" -->
+                        ```js
+                        <div onClick={function() {alert(1)}}>click</div>
+                        ```
+                        <!-- .element: class="fragment" -->
+                    - 严格模式下，事件函数的this为null，如果将组件方法当做事件回调，需要绑定this <!-- .element: class="fragment" -->
+                        ```js
+                        testEvent(e) {
+                            // 如果未绑定this，则this === null，取不到组件的数据
+                            alert(this.props.name);
+                        }
+                        render() {
+                            return <div onClick={this.testEvent.bind(this)}>click</div>
+                        }
+                        ```
+                        <!-- .element: class="fragment" -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## 从数组[1, 2, 3]变为[1, 3]有几种方式？
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    - 直接删除2 <!-- .element: class="fragment" -->
+                    - 将2替换成3，然后删掉之前3 <!-- .element: class="fragment" -->
+
+                    如果将[1, 2, 3]变为dom数组 <!-- .element: class="fragment" -->
+
+                    ```js
+                    [<li>1</li>, <li>2</li>, <li>3</li>]
+                    ```
+                    <!-- .element: class="fragment" -->
+
+                    或者更复杂的dom结构，程序如何判断可以直接删除2呢？ <!-- .element: class="fragment" -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## 给每个元素一个唯一标识，key
+
+                    ```js
+                    <ul>{[1, 2, 3].map((item) => <li key={item}>{item}</li>)}</ul>
+                    ```
+                    <!-- .element: class="fragment" -->
+
+                    - key必须唯一
+                    <!-- .element: class="fragment" -->
+                        - 对于[1, 2, 2, 3]这样的数组，就不能指定key，因为删除2时，不知道删除的是
+                        哪一个2
+                    <!-- .element: class="fragment" -->
+                    - key必须能标识每个元素
+                    <!-- .element: class="fragment" -->
+                        - 对数组[1, 2, 3]如果用数组的索引作为key，显然没意义
+                        ```js
+                        <ul>{[1, 2, 3].map((item, index) => <li key={index}>{item}</li>)}</ul>
+                        ```
+                    <!-- .element: class="fragment" -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## ref
+
+                    用于获取组件，该属性值是一个函数，分两种情况
+                    <!-- .element: class="fragment" -->
+
+                    - 作用于HTML元素时，用来获取dom节点
+                    <!-- .element: class="fragment" -->
+                        ```js
+                        <input ref={(input) => this.input = input} />
+                        // this.input为input dom
+                        ```
+                    - 作用于自定义组件时，用来获取组件的实例
+                    <!-- .element: class="fragment" -->
+                        ```js
+                        <Component ref={(component) => this.component = component} />
+                        // this.component为Component实例
+                        ```
+
+                    Don't Overuse Refs
+                    <!-- .element: class="fragment" -->
+                </script>
             </section>
         </section>
-
         <section class="stack">
-            <section>
-                <h2>有待改进的方面</h2>
+            <section data-markdown>
+                <script type="text/template">
+                    - JSX语法
+                    - 组件的编写
+                    - 组件的生命周期
+                    - 事件处理
+                    - key属性
+                    - ref属性
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## 简单的TodoList
+                </script>
             </section>
             <section>
-                <h2 class="fragment">执行力不够</h2>
-                <h2 class="fragment">项目管理经验不足</h2>
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="processonSvg1000" viewBox="219.0 26.0 537.0 461.0" width="537.0" height="461.0"><defs id="ProcessOnDefs1001"><radialGradient id="ProcessOnRadialGradient1007"><stop id="ProcessOnStop1008" stop-opacity="1.0" stop-color="#ffffff" offset="0.1"/><stop id="ProcessOnStop1009" stop-opacity="1.0" stop-color="#00ff00" offset="0.6"/></radialGradient><radialGradient id="ProcessOnRadialGradient1016"><stop id="ProcessOnStop1017" stop-opacity="1.0" stop-color="#ffffff" offset="0.1"/><stop id="ProcessOnStop1018" stop-opacity="1.0" stop-color="#ff0000" offset="0.6"/></radialGradient></defs><g id="ProcessOnG1002"><path id="ProcessOnPath1003" d="M219.0 26.0H756.0V487.0H219.0V26.0Z" fill="none"/><g id="ProcessOnG1004"><g id="ProcessOnG1005" transform="matrix(1.0,0.0,0.0,1.0,248.0,46.0)" opacity="1.0"><path id="ProcessOnPath1006" d="M0.0 210.5C0.0 -70.16666666666667 488.0 -70.16666666666667 488.0 210.5C488.0 491.1666666666667 0.0 491.1666666666667 0.0 210.5Z" stroke="#00ff00" stroke-width="0.0" stroke-dasharray="none" opacity="0.35" fill="url(#ProcessOnRadialGradient1007)"/></g><g id="ProcessOnG1010" transform="matrix(1.0,0.0,0.0,1.0,379.0,90.0)" opacity="1.0"><path id="ProcessOnPath1011" d="M0.0 4.0Q0.0 0.0 4.0 0.0L243.0 0.0Q247.0 0.0 247.0 4.0L247.0 38.0Q247.0 42.0 243.0 42.0L4.0 42.0Q0.0 42.0 0.0 38.0Z" stroke="#323232" stroke-width="2.0" stroke-dasharray="none" opacity="1.0" fill="#ffffff"/><g id="ProcessOnG1012" transform="matrix(1.0,0.0,0.0,1.0,10.0,9.75)"><text id="ProcessOnText1013" fill="#000000" font-weight="normal" font-style="normal" text-decoration="blink" font-family="微软雅黑" text-anchor="middle" font-size="18" x="113.5" y="18.45">input</text></g></g><g id="ProcessOnG1014" transform="matrix(1.0,0.0,0.0,1.0,318.0,141.5)" opacity="1.0"><path id="ProcessOnPath1015" d="M0.0 132.5C0.0 -44.166666666666664 355.0 -44.166666666666664 355.0 132.5C355.0 309.1666666666667 0.0 309.1666666666667 0.0 132.5Z" stroke="#ff0000" stroke-width="0.0" stroke-dasharray="none" opacity="0.35" fill="url(#ProcessOnRadialGradient1016)"/></g><g id="ProcessOnG1019" transform="matrix(1.0,0.0,0.0,1.0,433.0,176.0)" opacity="1.0"><path id="ProcessOnPath1020" d="M0.0 0.0L147.0 0.0L147.0 35.0L0.0 35.0Z" stroke="#323232" stroke-width="2.0" stroke-dasharray="none" opacity="1.0" fill="#ffffff"/><g id="ProcessOnG1021" transform="matrix(1.0,0.0,0.0,1.0,10.0,6.875)"><text id="ProcessOnText1022" fill="#000000" font-weight="normal" font-style="normal" text-decoration="blink" font-family="微软雅黑" text-anchor="middle" font-size="17" x="63.5" y="17.425">TodoItem</text></g></g><g id="ProcessOnG1023" transform="matrix(1.0,0.0,0.0,1.0,433.0,216.0)" opacity="1.0"><path id="ProcessOnPath1024" d="M0.0 0.0L147.0 0.0L147.0 35.0L0.0 35.0Z" stroke="#323232" stroke-width="2.0" stroke-dasharray="none" opacity="1.0" fill="#ffffff"/><g id="ProcessOnG1025" transform="matrix(1.0,0.0,0.0,1.0,10.0,6.25)"><text id="ProcessOnText1026" fill="#000000" font-weight="normal" font-style="normal" text-decoration="blink" font-family="微软雅黑" text-anchor="middle" font-size="18" x="63.5" y="18.45">TodoItem</text></g></g><g id="ProcessOnG1027" transform="matrix(1.0,0.0,0.0,1.0,433.0,254.0)" opacity="1.0"><path id="ProcessOnPath1028" d="M0.0 0.0L147.0 0.0L147.0 35.0L0.0 35.0Z" stroke="#323232" stroke-width="2.0" stroke-dasharray="none" opacity="1.0" fill="#ffffff"/><g id="ProcessOnG1029" transform="matrix(1.0,0.0,0.0,1.0,10.0,6.25)"><text id="ProcessOnText1030" fill="#000000" font-weight="normal" font-style="normal" text-decoration="blink" font-family="微软雅黑" text-anchor="middle" font-size="18" x="63.5" y="18.45">TodoItem</text></g></g><g id="ProcessOnG1031" transform="matrix(1.0,0.0,0.0,1.0,433.0,294.0)" opacity="1.0"><path id="ProcessOnPath1032" d="M0.0 0.0L147.0 0.0L147.0 35.0L0.0 35.0Z" stroke="#323232" stroke-width="2.0" stroke-dasharray="none" opacity="1.0" fill="#ffffff"/><g id="ProcessOnG1033" transform="matrix(1.0,0.0,0.0,1.0,10.0,6.25)"><text id="ProcessOnText1034" fill="#000000" font-weight="normal" font-style="normal" text-decoration="blink" font-family="微软雅黑" text-anchor="middle" font-size="18" x="63.5" y="18.45">TodoItem</text></g></g><g id="ProcessOnG1035" transform="matrix(1.0,0.0,0.0,1.0,433.0,335.0)" opacity="1.0"><path id="ProcessOnPath1036" d="M0.0 0.0L147.0 0.0L147.0 35.0L0.0 35.0Z" stroke="#323232" stroke-width="2.0" stroke-dasharray="none" opacity="1.0" fill="#ffffff"/><g id="ProcessOnG1037" transform="matrix(1.0,0.0,0.0,1.0,10.0,6.25)"><text id="ProcessOnText1038" fill="#000000" font-weight="normal" font-style="normal" text-decoration="blink" font-family="微软雅黑" text-anchor="middle" font-size="18" x="63.5" y="18.45">TodoItem</text></g></g><g id="ProcessOnG1039" transform="matrix(1.0,0.0,0.0,1.0,239.0,142.0)" opacity="1.0"><path id="ProcessOnPath1040" d="M0.0 0.0L160.0 0.0L160.0 40.0L0.0 40.0Z" stroke="#323232" stroke-width="0.0" stroke-dasharray="none" opacity="1.0" fill="none"/><g id="ProcessOnG1041" transform="matrix(1.0,0.0,0.0,1.0,0.0,6.875)"><text id="ProcessOnText1042" fill="#000000" font-weight="normal" font-style="normal" text-decoration="blink" font-family="微软雅黑" text-anchor="middle" font-size="21" x="80.0" y="21.525">App</text></g></g><g id="ProcessOnG1043" transform="matrix(1.0,0.0,0.0,1.0,290.0,224.0)" opacity="1.0"><path id="ProcessOnPath1044" d="M0.0 0.0L160.0 0.0L160.0 40.0L0.0 40.0Z" stroke="#323232" stroke-width="0.0" stroke-dasharray="none" opacity="1.0" fill="none"/><g id="ProcessOnG1045" transform="matrix(1.0,0.0,0.0,1.0,0.0,9.375)"><text id="ProcessOnText1046" fill="#000000" font-weight="normal" font-style="normal" text-decoration="blink" font-family="微软雅黑" text-anchor="middle" font-size="17" x="80.0" y="17.425">TodoList</text></g></g></g></g></svg>
             </section>
-        </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## TodoItem组件  
+                    
+                    ```js
+                    import React, {Component} from 'react';
+                    import ReactDom from 'react-dom';
 
-        <section class="stack">
-            <section>
-                <h2>下一步工作计划</h2>
+                    class TodoItem extends Component {
+                        render() {
+                            return <li>
+                                <span>{this.props.name}</span>
+                                <span onClick={this.props.onDelete}>删除</span>
+                            </li>
+                        }
+                    }
+                    ```
+                </script>
             </section>
-            <section>
-                <h3>技术</h3>
-                <ul>
-                    <li class="fragment">从工具到平台</li>
-                    <li class="fragment">跨产品线通用组件提取</li>
-                    <li class="fragment">技术调研，如采用BigPipe技术，提高pcweb访问速度</li>
-                    <li class="fragment">webapp</li>
-                </ul>
+            <section data-markdown>
+                <script type="text/template">
+                    ## TodoList组件  
+                    
+                    ```js
+                    class TodoList extends Component {
+                        render() {
+                            return <ul>
+                                {this.props.list.map((item, index) => {
+                                    return <TodoItem name={item.name} 
+                                    onDelete={this.props.onDelete.bind(this, index)} 
+                                    key={item.id}
+                                    />
+                                })}
+                            </ul>
+                        }
+                    }
+                    ```
+                </script>
             </section>
-            <section>
-                <h3>小组建设</h3>
-                <ul>
-                    <li class="fragment">更多高质量的技术分享</li>
-                    <li class="fragment">不局限于业务开发</li>
-                </ul>
-            </section>
-        </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## App组件  
+                    
+                    ```js
+                    class App extends Component {
+                        constructor(props) {
+                            super(props);
+                            this.state = {
+                                list: []
+                            };
+                        }
 
-        <section class="stack">
-            <section>
-                <h2>团队建议</h2>
-            </section>
-            <section>
-                <h2>规范流程</h2>
+                        add(e) {
+                            e.preventDefault();
+                            this.setState({
+                                list: this.state.list.concat([{
+                                    // 用时间戳作为每条数据的唯一key
+                                    id: new Date().getTime(),
+                                    name: this.input.value
+                                }])
+                            });
+                        }
+
+                        delete(index) {
+                            this.state.list.splice(index, 1)
+                            this.forceUpdate();
+                        }
+
+                        render() {
+                            return <div>
+                                <form onSubmit={this.add.bind(this)}>
+                                    <input type="text" ref={(input) => this.input = input}/>
+                                </form>
+                                <TodoList list={this.state.list} 
+                                    onDelete={this.delete.bind(this)}
+                                />
+                            </div>
+                        }
+                    }
+                    ```
+                </script>
             </section>
         </section>
 

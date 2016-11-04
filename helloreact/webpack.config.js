@@ -1,14 +1,19 @@
 module.exports = {
-    entry: './src/app.js',
+    entry: {
+        hello: './src/hello.js',
+        todolist:'./src/todolist.js'
+    },
     output: {
-        path: './build'
+        path: './build',
+		filename: '[name].js'
     },
     module: {
         loaders: [
 			{
                 test: /\.js$/,
-                loader: 'babel-loader?cacheDirectory=.cache&presets[]=react'
+                loader: 'babel-loader?cacheDirectory=.cache&presets[]=react&presets[]=es2015'
             }
         ]
-    }
+    },
+    watch: true
 };
