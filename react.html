@@ -329,6 +329,8 @@
                         - 对数组[1, 2, 3]如果用数组的索引作为key，显然没意义
                         ```js
                         <ul>{[1, 2, 3].map((item, index) => <li key={index}>{item}</li>)}</ul>
+                        // 等价于
+                        <ul>{[1, 2, 3].map((item, index) => <li>{item}</li>)}</ul>
                         ```
                     <!-- .element: class="fragment" -->
                 </script>
