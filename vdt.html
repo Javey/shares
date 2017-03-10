@@ -328,6 +328,31 @@
             </section>
             <section data-markdown>
                 <script type="text/template">
+                    Visitor
+
+                    ```js
+                    _visit: function(element, isRoot) {
+                        element = element || {};
+                        switch (element.type) {
+                            case Type.JS:
+                                return this._visitJS(element);
+                            case Type.JSXElement:
+                                return this._visitJSX(element);
+                            ...
+                            default:
+                                return 'null';
+                        }
+                    },
+
+                    _visitJSXElement: function(element) {
+                        return "h('" + element.value + "'," + this._visitJSXAttribute(element.attributes) + ", " + 
+                            this._visitJSXChildren(element.children) + ')';
+                    }
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
                     function => dom 
 
                     ```js
@@ -479,23 +504,86 @@ function(obj, _Vdt, blocks) {
                 </script>
             </section>
         </section>
-        <section data-markdown>
-            <script type="text/template">
-                1. Vdt中 `this`, `self`, `scope`
-                2. 去掉 `with`
-                3. 保留字 `parent`
-                4. 只有最后一个元素被返回
-                4. `{}`中只能写表达式（右值）
-                5. `v-if`, `v-for` 语法糖
-                6. 以大写字母开头的元素都会编译成函数调用
+        <section class="stack">
+            <section data-markdown>
+                <script type="text/template">
+                    1. Vdt中 `this`, `self`, `scope`
+                    2. 去掉 `with`
+                        ```js
+                        Vdt.compile(templateString, {noWith: true});
+                        ```
+                    3. 保留字 `parent`
+                    4. 只有最后一个元素被返回
+                    4. `{}`中只能写表达式（右值）
+                    5. `v-if`, `v-for` 语法糖
+                    6. 以大写字母开头的元素都会编译成函数调用
+                        ```
+                        <Slider value="1" />
+                        => 
+                        Slider({value: "1"})
+                        ```
+                    7. 模板开头可以书写任意js代码
+                    8. 由于类似`<a`这样的字符串会被当做元素，所以小于判断必须加空格`1 < a`
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    this & self & scope
+
+                    ```js
+                    function(obj, _Vdt, blocks) { }
                     ```
-                    <Slider value="1" />
-                    => 
-                    Slider({value: "1"})
+                    <!-- .element: class="fragment" -->
+
+                    1. this 指向vdt实例 <!-- .element: class="fragment" -->
+                        ```js
+                        vdt.template.call(vdt, vdt.data, Vdt)
+                        ```
+                    2. scope 指向传入模板函数的实参 <!-- .element: class="fragment" -->
+                        ```js
+                        scope = obj
+                        ```
+                        ```js
+                        var _blocks = {}, __blocks = extend({}, blocks), _obj = null || {};
+                        return layout.call(this, _obj, _Vdt, ...)
+                        ```
+                    3. self 指向渲染到模板的数据 <!-- .element: class="fragment" -->
+                        ```js
+                        self = this.data; // vdt.data
+                        ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    可变元素
+
+                    ```js
+                    <Button tagName="button">Click</Button>
+                    <Button tagName="a">Click</Button>
+                    =>
+                    <button>Click</button>
+                    <a>Click</a>
                     ```
-                7. 模板开头可以书写任意js代码
-                8. 由于类似`<a`这样的字符串会被当做元素，所以小于判断必须加空格`1 < a`
-            </script>
+                    <!-- .element: class="fragment" -->
+
+                    ```js
+                    var h = _Vdt.virtualDom.h;
+                    h('div', {className: 'a'}, ['text']);
+                    ```
+                    <!-- .element: class="fragment" -->
+
+                    ```js
+                    var Button = function(attrs) {
+                        return h(scope.tagName || 'a', attrs, attrs.children);
+                    };
+
+                    <Button class={{ scope.className }}>
+                        {{ scope.children }}
+                    </Button>
+                    ```
+                    <!-- .element: class="fragment" -->
+                </script>
+            </section>
         </section>
         <section>
             <p>Q&A</p>
