@@ -45,28 +45,37 @@
             <section data-markdown>
                 <script type="text/template">
                     ### ES6字符串模板
-                    ```js
-                    var a = 1,
-                        b = `The number is ${a}`;
-                    console.log(b);
-                    ```
+                    <!-- .element: class="fragment" data-fragment-index="1" -->
+                        ```js
+                        var a = 1,
+                            b = `The number is ${a}`;
+                        console.log(b);
+                        ```
+                    <!-- .element: class="fragment" data-fragment-index="1"  -->
+                    
                     ### underscore/lodash模板
+                    <!-- .element: class="fragment" data-fragment-index="2"  -->
                     ```js
                     var b = 'The number is <%- a %>',
                         template = _.template(b);
                     console.log(template({a: 1}));
                     ```
+                    <!-- .element: class="fragment" data-fragment-index="2"  -->
                 </script>
             </section>
             <section data-markdown>
                 <script type="text/template">
                     ### ES6字符串模板
+                    <!-- .element: class="fragment" data-fragment-index="1" -->
                     ```js
                     `The number is ${a}`
                     =>
                     'The number is ' + a;
                     ```
+                    <!-- .element: class="fragment" data-fragment-index="1" -->
+
                     ### underscore/lodash模板
+                    <!-- .element: class="fragment" data-fragment-index="2"  -->
                     ```js
                     'The number is <%- a %>'
                     =>
@@ -84,6 +93,7 @@
                         return __p;
                     }
                     ```
+                    <!-- .element: class="fragment" data-fragment-index="2"  -->
                 </script>
             </section>
             <section data-markdown>
