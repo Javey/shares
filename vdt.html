@@ -554,7 +554,9 @@ function(obj, _Vdt, blocks) {
                         scope = obj
                         ```
                         ```js
-                        var _blocks = {}, __blocks = extend({}, blocks), _obj = null || {};
+                        // <t:layout region="beijing" />
+                        var _blocks = {}, __blocks = extend({}, blocks), 
+                            _obj = {region: "beijing"} || {};
                         return layout.call(this, _obj, _Vdt, ...)
                         ```
                     3. self 指向渲染到模板的数据 <!-- .element: class="fragment" -->
