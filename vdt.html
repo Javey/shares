@@ -585,6 +585,36 @@ function(obj, _Vdt, blocks) {
                 </script>
             </section>
         </section>
+        <section class="stack">
+            <section data-markdown>
+                <script type="text/template">
+                    ## Intact 
+
+                    ```js
+                    Intact.extend({
+                        defaults: {},
+                        template: template
+                    })
+                    ```
+                    <!-- .element: class="fragment" -->
+                    ```js
+                    // constructor
+                    this.vdt = Vdt(this.template);
+                    this._init();
+                    this.on('change', this.update); // update automatically
+
+                    // init
+                    this.element = this.vdt.render(this);
+                    this._create();
+
+                    // update
+                    this.element = this.vdt.update(this);
+                    this._update();
+                    ```
+                    <!-- .element: class="fragment" -->
+                </script>
+            </section>
+        </section>
         <section>
             <p>Q&A</p>
         </section>
