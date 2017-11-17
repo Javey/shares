@@ -453,9 +453,14 @@ $btn-bg-color := blue</code></pre>
                     </KPC.Button>
                     ```
                     ```js
-                    var MyDialog = KPC.Dialog.extend({
-                        template: `<t:parent><b:body><a>KPC</a></b:body></t:parent>`
-                    });
+                    class MyDialog extends KPC.Dialog {
+                        @Intact.template()
+                        get template() {
+                            return `<t:parent>
+                                <b:body><a>KPC</a></b:body>
+                            </t:parent>`;
+                        }
+                    }
                     ```
                     ```js
                     show() {
@@ -566,6 +571,95 @@ $btn-bg-color := blue</code></pre>
             </section>
             <section data-markdown>
                 <script type="text/template">
+                    ```js
+                    // for browser
+                    output: {
+                        path: path.resolve(__dirname, './dist'),
+                        filename: '[name].js',
+                        library: 'KPC',
+                        libraryTarget: 'umd',
+                    },
+                    externals: {
+                        intact: {
+                            root: 'Intact',
+                            commonjs2: 'intact',
+                            commonjs: 'intact',
+                            amd: 'intact',
+                        }
+                    },
+                    // ...
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```js
+                    (function webpackUniversalModuleDefinition(root, factory) {
+                        if(typeof exports === 'object' && typeof module === 'object')
+                            // commonjs2
+                            module.exports = factory(require("intact"));
+                        else if(typeof define === 'function' && define.amd)
+                            // amd
+                            define(["intact"], factory);
+                        else if(typeof exports === 'object')
+                            // commonjs
+                            exports["KPC"] = factory(require("intact"));
+                        else
+                            // root
+                            root["KPC"] = factory(root["Intact"]);
+                    })(this, function(__WEBPACK_EXTERNAL_MODULE_2__) {
+                        return // ...
+                    });
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```js
+                    const nodeExternal = require('webpack-node-externals');
+
+                    // ...
+
+                    target: 'node',
+                    externals: [
+                        nodeExternal({whitelist: ['universal-router', 'webpack/hot/poll?1000']}),
+                        {'../webpack.config.client': 'commonjs ../webpack.config.client'}
+                    ],
+                    node: {
+                        __dirname: false,
+                        __filename: false,
+                    },
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```js
+                    /***/ "path":
+                    /***/ (function(module, exports) {
+
+                    module.exports = require("path");
+
+                    /***/ }),
+
+                    /***/ "intact":
+                    /***/ (function(module, exports) {
+
+                    module.exports = require("intact");
+
+                    /***/ }),
+
+                    /***/ "vdt":
+                    /***/ (function(module, exports) {
+
+                    module.exports = require("vdt");
+
+                    /***/ }),
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
                     1. .npmignore
                     2. package.json
                         1. main & browser & module
@@ -602,9 +696,16 @@ $btn-bg-color := blue</code></pre>
                     ```
                 </script>
             </section>
-        <section> 
+            <section data-markdown>
+                <script type="text/template">
+                    ### 代码风格检查
+                    1. eslint
+                    2. [eslint-plugin-airbnb](https://github.com/airbnb/javascript)
+                </script>
+            </section>
+        </section> 
         <section>
-            <p>Q&A</p>
+            <h1>Q&A</h1>
         </section>
     </div>
 </div>
