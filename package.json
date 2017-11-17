@@ -1,0 +1,19 @@
+{
+  "name": "shares",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.op.ksyun.com:ksc-console/shares.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "intact": "^2.2.0-9",
+    "kpc": "git+http://newgit.op.ksyun.com/ksyun-fe/kpc.git#v4.0"
+  }
+}

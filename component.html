@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Component</title>
+    <link rel="stylesheet" href="bower_components/reveal.js/css/reveal.css"/>
+    <link rel="stylesheet" href="bower_components/reveal.js/css/theme/black.css"/>
+    <link rel="stylesheet" href="bower_components/reveal.js/lib/css/zenburn.css"/>
+    <style type="text/css">
+        .brace-wrapper {
+            position: absolute;
+            top: -170px;
+            left: 190px;
+        }
+        .brace-wrapper .text {
+            font-size: 1.5em;
+            position: absolute;
+            top: 400px;
+        }
+        .brace-wrapper:first-of-type .text {
+            margin-left: 43px;
+        }
+        .brace {
+            font-size: 500px !important;
+            transform: rotate(270deg);
+        } 
+        .brace-wrapper:nth-of-type(2) {
+            left: 630px;
+        }
+        .reveal table th, .reveal table td {
+            padding: 0.785714285714286rem 0.357142857142857rem 0.785714285714286rem 0.857142857142857rem !important;
+            border-bottom: inherit !important;
+        }
+    </style>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section> 
+            <h1>component</h1>
+        </section>
+        <section data-markdown>
+            <script type="text/template">
+                3. 命名规范
+                4. 主题定制
+                5. 组件设计
+                6. 单元测试
+                7. 构建发布
+            </script>
+        </section>
+        <section class="stack">
+            <section>
+                <h1>css</h1>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    1. 语义化
+
+                    2. 简练
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    1. 组件样式名：`k-{组件名}`
+                    2. 组件内部样式名：`k-{类别名}`
+                    
+                    ```html
+                    <button class="k-btn k-circle">button</button>
+
+                    =>
+
+                    <button class="k-btn k-btn-circle">button</button>
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```styl
+                    .k-btn
+                        display inline-block
+                        &.k-circle
+                            border-radius 5px
+
+                    =>
+
+                    .k-btn
+                        display inline-block
+                    .k-btn-circel
+                        border-radius 5px
+                    ```
+                </script>
+            </section>
+            <section>
+                <h2>主题定制</h2>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    1. 对于可能通过主题改变的属性值，都提取变量
+                    2. 利用stylus/less/sass提供的函数计算关联属性值，如：color
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```styl
+                    // variables.styl
+
+                    $btn-border-radius := 5px
+                    $btn-bg-color := red 
+                    ```
+                    ```styl
+                    // button.styl
+
+                    @require('./variables.styl')
+
+                    .k-btn
+                        border-radius $btn-border-radius
+                        background-color $btn-bg-color
+                        &:hover
+                            background-color lighten($btn-bg-color, 20%) 
+                    ```
+                </script>
+            </section>
+            <section>
+                <p>通过webpack stylus-loader引入主题包文件，复写变量</p>
+                <pre><code class="lang-js">{
+    test: /\.(styl|css)$/,
+    use: [
+
+        // ... 
+
+        {
+            loader: 'stylus-loader', 
+            options: {
+                'include css': true,
+                'import': path.resolve(__dirname, 'styles/themes/test.styl'),
+            }
+        }
+    ]
+}</code></pre>
+                <pre><code class="lang-styl">// themes/test.styl
+
+$btn-bg-color := blue</code></pre>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    使用autoprefixer提高css兼容性
+                    ```js
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            plugins: [autoprefixer({
+                                browsers: [
+                                    'last 2 versions',
+                                    'ie >= 9',
+                                ],
+                            })],
+                            sourceMap: true,
+                        }
+                    }, 
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```css
+                    .a {
+                        display: flex;
+                        align-items: center;
+                    }
+
+                    =>
+
+                    .a {
+                        display: -webkit-box;
+                        display: -ms-flexbox;
+                        display: flex;
+                        -webkit-box-align: center;
+                        -ms-flex-align: center;
+                        align-items: center;
+                    }
+                    ```
+                </script>
+            </section>
+        </section>
+        <section class="stack">
+            <section>
+                <h2>组件逻辑</h2>
+            </section>
+            <section>
+                <h3>视图逻辑与业务逻辑分离</h3>
+                <h3>progress</h3>
+                <div id="progress"></div>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```html
+                    <svg class="k-canvas" viewBox="0 0 120 120" v-if={{ type === 'circle' }}>
+                    {{ do {
+                        const r = (120 - strokeWidth) / 2;
+                        const circumference = 2 * Math.PI * r;
+
+                        [
+                            <circle class="k-meter" cx="60" cy="60" r={{ r }}
+                                stroke-width={{ strokeWidth }}
+                            />,
+                            <circle class="k-value" cx="60" cy="60" r={{ r }}
+                                stroke-dashoffset={{ circumference * (1 - percent / 100) }}
+                                stroke-dasharray={{ circumference }}
+                                stroke-width={{ strokeWidth }}
+                            />
+                        ]
+                    } }}
+                    </svg>
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```html
+                    <svg viewBox="0 0 100 100">
+                        <path :d="pathString" :stroke="trailColor" 
+                            :stroke-width="trailWidth" 
+                            :fill-opacity="0"
+                        />
+                        <path :d="pathString" :stroke-linecap="strokeLinecap"
+                            :stroke="strokeColor" 
+                            :stroke-width="strokeWidth" 
+                            fill-opacity="0" 
+                            :style="pathStyle"/>
+                    </svg>
+					```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```js
+                    computed: {
+                        // ...
+                        pathString () {
+                            return `M 50,50 m 0,-${this.radius}
+                            a ${this.radius},${this.radius} 0 1 1 0,${2 * this.radius}
+                            a ${this.radius},${this.radius} 0 1 1 0,-${2 * this.radius}`;
+                        },
+                        pathStyle () {
+                            return {
+                                'stroke-dasharray': `${this.len}px ${this.len}px`,
+                                'stroke-dashoffset': `${((100 - this.percent) / 100 * this.len)}px`,
+                                'transition': 'stroke-dashoffset 0.6s ease 0s, stroke 0.6s ease'
+                            };
+                        },
+                        wrapClasses () {
+                            return `${prefixCls}`;
+                        },
+                        innerClasses () {
+                            return `${prefixCls}-inner`;
+                        }
+                    }
+					```
+                </script>
+            </section>
+            <section>
+                <h3>table</h3>
+                <div id="table"></div>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```html
+                    <KPC.Table 
+                        scheme={{
+                            name: {
+                                title: '名称',
+                                template(data) {
+                                    return <a href="javascript:;">{data.name}</a>
+                                }
+                            },
+                            op: {
+                                title: '操作',
+                                template(data) {
+                                    return <KPC.Button>删除</KPC.Button>
+                                }
+                            }
+                        }}
+                        data={[{name: 'Javascript'}, {name: 'PHP'}]}
+                    />
+                    ```
+                </script>
+            </section>
+            <section>
+                <pre><code class="lang-html">&lt;template>
+    &lt;Table :columns="columns" :data="data">&lt;/Table>
+&lt;/template></code></pre>
+                <pre><code class="lang-js">data() {
+    return {
+        columns: [
+            {
+                title: '名称',
+                key: 'name',
+                render: (h, params) => {
+                    return h('a', {
+                        props: {
+                            href: 'javascript:;'
+                        }
+                    }, data.name);
+                }
+            },
+            {
+                title: '操作',
+                key: 'op',
+                render: (h, params) => {
+                    // 借助loader
+                    return &lt;Button>删除&lt;/Button> 
+                }
+            }
+        ],
+        data: [{name: 'Javascript'}, {name: 'PHP'}]
+    }
+}</code></pre>
+            </section>
+            <section>
+                <h2>按需加载</h2>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```html
+                    const Table = require('kpc/components/table');
+                    const Button = require('kpc/components/button');
+
+                    <Table 
+                        scheme={{
+                            name: {
+                                title: '名称',
+                                template(data) {
+                                    return <a href="javascript:;">{data.name}</a>
+                                }
+                            },
+                            op: {
+                                title: '操作',
+                                template(data) {
+                                    return <Button>删除</Button>
+                                }
+                            }
+                        }}
+                        data={[{name: 'Javascript'}, {name: 'PHP'}]}
+                    />
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```html
+                    <template>
+                        <Table ... />
+                        <Button>button</Button>
+                    </template>
+                    ```
+                    ```js
+                    import Table from 'iview/src/components/table';
+                    import Button from 'iview/src/components/button';
+
+                    // or tree shaking
+                    // import {Table, Button} from 'iview';
+
+                    // ...
+                    components: {Table, Button}
+                    ```
+                </script>
+            </section>
+        </section>
+        <section class="stack">
+            <section>
+                <h2>顶层弹出元素</h2>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```html
+                    <div style="position: relative; overflow: hidden;">
+                        <button>click</button>
+                        <div style="position: absolute; width: 100px; height 100px; background-color: red;">
+                            Dialog
+                        </div>
+                    </div>
+                    ```
+                    <div style="position: relative; overflow: hidden;">
+                        <button>click</button>
+                        <div style="position: absolute; width: 100px; height 100px; background-color: red;">
+                            Dialog
+                        </div>
+                    </div>
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```js
+                    <div style="position: relative; overflow: hidden;">
+                        <button>click</button>
+                        <KPC.Dialog>Dialog</KPC.Dialog>
+                    </div>
+                    ```
+                    <div id="dialog"></div>
+                </script>
+            </section>
+        </section>
+        <section class="stack">
+            <section>
+                <h2>实例组件</h2>
+            </section>
+            <section data-markdown> 
+                <script type="text/template">
+                    ```html
+                    <KPC.Button ev-click={self.show.bind(self)}>
+                        Show Dialog
+                    </KPC.Button>
+                    ```
+                    ```js
+                    show() {
+                        new KPC.Dialog({
+                            title: 'Dialog Instance Demo',
+                            children: '<a>KPC</a>',
+                        }).show();
+                    }
+                    ```
+                    <div id="dialog_instance"></div>
+                </script>
+            </section>
+            <section>
+                <h2>block</h2> 
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```html
+                    <div class="k-dialog">
+                        <div class="k-header">
+                            <b:header>
+                                <span class="k-title">{{ self.get('title') }}</span>
+                            </b:header>
+                        </div>
+                        <div class="k-body"><b:body>{{ self.get('children') }}</b:body></div>
+                        <div class="k-footer">
+                            <b:footer>
+                                <Button ev-click={{ self.cancel.bind(self) }}>取消</Button>
+                                <Button type="primary" ev-click={{ self.ok.bind(self) }}>确定</Button>
+                            </b:footer>
+                        </div>
+                    </div>
+                    ```
+                </script>
+            </section>
+            <section data-markdown> 
+                <script type="text/template">
+                    ```html
+                    <KPC.Button ev-click={self.show.bind(self)}>
+                        Show Dialog
+                    </KPC.Button>
+                    ```
+                    ```js
+                    var MyDialog = KPC.Dialog.extend({
+                        template: `<t:parent><b:body><a>KPC</a></b:body></t:parent>`
+                    });
+                    ```
+                    ```js
+                    show() {
+                        new MyDialog().show();
+                    }
+                    ```
+                    <div id="dialog_instance_inherit"></div>
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```html
+                    <div>
+                        <KPC.Button ev-click={self.show.bind(self)}>Show Dialog</KPC.Button>
+                        <KPC.Dialog v-model="show">
+                            <b:body><a>KPC</a></b:body>
+                            <b:footer>
+                                <KPC.Button>上一步</KPC.Button>
+                                {parent()}
+                            </b:footer>
+                        </KPC.Dialog>
+                    </div>
+                    ```
+                    <div id="dialog_block"></div>
+                </script>
+            </section>
+        </section>
+        <section class="stack">
+            <section>
+                <h1>单元测试</h1>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    1. mocha
+                    2. sinon + chai (sinon-chai)
+                    3. karma
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```js
+                    describe('Dialog unit test:', () => {
+                        let component;
+
+                        afterEach(() => {
+                            component && component.destroy();
+                            component = null;
+                        });
+
+                        it('should render dialog correctly', () => {
+                            component = render(Dialog);
+                            expect(component.$element.className).to.equal('k-dialog-wrapper');
+                            expect(component.$element.children.length).to.equal(0);
+                        });
+
+                        it('should show dialog correctly', () => {
+                            component = render(Dialog, {title: 'Dialog'});
+                            component.show();
+                            const element = component.$element;
+                            expect(element.children.length).to.equal(2);
+                            expect(element.children[0].classList.contains('k-overlay')).to.be.true;
+                            expect(element.children[1].classList.contains('k-dialog')).to.be.true;
+                            expect(element.querySelector('.k-title').innerHTML).to.equal('Dialog');
+                        });
+                    });
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```js
+                    module.exports = function (config) {
+                        config.set({
+                            frameworks: ['mocha', 'sinon-chai'],
+                            files: ['./test.js'],
+                            plugins : [
+                                'karma-mocha',
+                                'karma-webpack',
+                                'karma-sinon-chai',
+                            ],
+                            preprocessors: {
+                                './index.js': ['webpack']
+                            },
+                            webpack: webpackConfig,
+                            client: {
+                                mocha: {
+                                    reporter: 'html'
+                                }
+                            },
+                            // ...
+                        });
+                    };
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```bash
+                    karma start karma.conf.js 
+                    ```
+                    http://192.168.137.117:9877/debug.html
+                </script>
+            </section>
+        </section>
+        <section class="stack">
+            <section>
+                <h2>构建发布</h2>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    1. .npmignore
+                    2. package.json
+                        1. main & browser & module
+                            ```js
+                            // node commonJs
+                            main
+
+                            // webpack: resolve.mainFileds
+                            ['browser', 'module', 'main'] // for webworker & web
+                            ['module', 'main'] // for others
+                            ```
+                        2. peerDependencies
+                        3. version
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ```bash
+                    npm publish
+                    ```
+                    更新版本(当前版本:1.1.2)
+                    ```bash
+                    npm version patch # 1.1.3
+                    npm version minor # 1.2.0
+                    npm version major # 2.0.0
+
+                    npm version prerelease # 1.2.0-0 
+                    ```
+
+                    ```json
+                    scripts: {
+                        "release": "npm version patch && git push --tags && npm publish"
+                    }
+                    ```
+                </script>
+            </section>
+        <section> 
+        <section>
+            <p>Q&A</p>
+        </section>
+    </div>
+</div>
+<script type="text/javascript" src="bower_components/reveal.js/lib/js/head.min.js"></script>
+<script type="text/javascript" src="bower_components/reveal.js/js/reveal.js"></script>
+<script type="text/javascript" src="node_modules/intact/dist/intact.js"></script>
+<script type="text/javascript" src="node_modules/kpc/dist/kpc.js"></script>
+<script type="text/javascript">
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'slide',
+        dependencies: [
+            { src: 'bower_components/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+            { src: 'bower_components/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            { src: 'bower_components/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); }, callback: markdownDone },
+            { src: 'bower_components/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+            { src: 'bower_components/reveal.js/plugin/notes/notes.js' }
+        ]
+    });
+    var ProgressDemo = Intact.extend({
+        defaults() {
+            return {
+                percent: 10
+            }
+        },
+        template: `<div>
+            <KPC.Progress type="circle" percent={self.get('percent')} style="display: inline-block;"></KPC.Progress>
+            <div class='k-btns'>
+                <KPC.Button size="mini" class="k-btn" type="default" ev-click={self.add.bind(self)}>+</KPC.Button>
+                <KPC.Button size="mini" class="k-btn" type="default" ev-click={self.min.bind(self)}>-</KPC.Button>
+            </div>
+        </div>`,
+        add() {
+            this.set('percent', this.get('percent') + 10);
+        },
+
+        min() {
+            this.set('percent', this.get('percent') - 10);
+        }
+    });
+    Intact.mount(ProgressDemo, document.getElementById('progress'));
+
+    var DialogDemo = Intact.extend({
+        template: `<div style="position: relative; overflow: hidden;">
+            <button ev-click={self.show.bind(self)}>click</button>
+            <KPC.Dialog v-model="show">Dialog</KPC.Dialog>
+        </div>`,
+        
+        show() {
+            this.set('show', !this.get('show'));
+        }
+    });
+
+    var TableDemo = Intact.extend({
+        template: `
+            <KPC.Table 
+                scheme={{
+                    name: {
+                        title: '名称',
+                        template(data) {
+                            return <a href="javascript:;">{data.name}</a>
+                        }
+                    },
+                    op: {
+                        title: '操作',
+                        template(data) {
+                            return <KPC.Button>删除</KPC.Button>
+                        }
+                    }
+                }}
+                data={[{name: 'Javascript'}, {name: 'PHP'}]}
+            />
+        `
+    });
+
+    var DialogInstanceDemo = Intact.extend({
+        template: `<KPC.Button ev-click={self.show.bind(self)}>Show Dialog</KPC.Button>`,
+        show() {
+            new KPC.Dialog({
+                title: 'Dialog Instance Demo',
+                children: '<a>KPC</a>',
+            }).show();
+        }
+    });
+
+    var MyDialog = KPC.Dialog.extend({
+        template: `<t:parent><b:body><a>KPC</a></b:body></t:parent>`
+    });
+    var DialogInstanceInheritDemo = Intact.extend({
+        template: `<KPC.Button ev-click={self.show.bind(self)}>Show Dialog</KPC.Button>`,
+        show() {
+            new MyDialog().show();
+        }
+    });
+
+    var DialogBlockDemo = Intact.extend({
+        template: `<div>
+            <KPC.Button ev-click={self.show.bind(self)}>Show Dialog</KPC.Button>
+            <KPC.Dialog v-model="show">
+                <b:body><a>KPC</a></b:body>
+                <b:footer>
+                    <KPC.Button>上一步</KPC.Button>
+                    {parent()}
+                </b:footer>
+            </KPC.Dialog>
+        </div>`,
+        show() {
+            this.set('show', true);
+        }
+    });
+
+    function markdownDone() {
+        Intact.mount(DialogDemo, document.getElementById('dialog'));
+        Intact.mount(TableDemo, document.getElementById('table'));
+        Intact.mount(DialogInstanceDemo, document.getElementById('dialog_instance'));
+        Intact.mount(DialogInstanceInheritDemo, document.getElementById('dialog_instance_inherit'));
+        Intact.mount(DialogBlockDemo, document.getElementById('dialog_block'));
+    }
+
+</script>
+</body>
+</html>
