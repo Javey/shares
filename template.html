@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vdt</title>
+    <link rel="stylesheet" href="bower_components/reveal.js/css/reveal.css"/>
+    <link rel="stylesheet" href="bower_components/reveal.js/css/theme/black.css"/>
+    <link rel="stylesheet" href="bower_components/reveal.js/lib/css/zenburn.css"/>
+    <style type="text/css">
+        .brace-wrapper {
+            position: absolute;
+            top: -170px;
+            left: 190px;
+        }
+        .brace-wrapper .text {
+            font-size: 1.5em;
+            position: absolute;
+            top: 400px;
+        }
+        .brace-wrapper:first-of-type .text {
+            margin-left: 43px;
+        }
+        .brace {
+            font-size: 500px !important;
+            transform: rotate(270deg);
+        } 
+        .brace-wrapper:nth-of-type(2) {
+            left: 630px;
+        }
+    </style>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section> 
+            <h1>{template}</h1>
+        </section>
+        <section class="stack">
+            <section>
+                <ul>
+                    <li class="fragment">什么是模板？</li>
+                    <li class="fragment">模板的本质是什么？</li>
+                </ul>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ### ES6字符串模板
+                    <!-- .element: class="fragment" data-fragment-index="1" -->
+                        ```js
+                        var a = 1,
+                            b = `The number is ${a}`;
+                        console.log(b);
+                        ```
+                    <!-- .element: class="fragment" data-fragment-index="1"  -->
+                    
+                    ### underscore/lodash模板
+                    <!-- .element: class="fragment" data-fragment-index="2"  -->
+                    ```js
+                    var b = 'The number is <%- a %>',
+                        template = _.template(b);
+                    console.log(template({a: 1}));
+                    ```
+                    <!-- .element: class="fragment" data-fragment-index="2"  -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ### ES6字符串模板
+                    <!-- .element: class="fragment" data-fragment-index="1" -->
+                    ```js
+                    `The number is ${a}`
+                    =>
+                    'The number is ' + a;
+                    ```
+                    <!-- .element: class="fragment" data-fragment-index="1" -->
+
+                    ### underscore/lodash模板
+                    <!-- .element: class="fragment" data-fragment-index="2"  -->
+                    ```js
+                    'The number is <%- a %>'
+                    =>
+                    function(obj) {
+                        var __t, __p = '', 
+                            __j = Array.prototype.join,
+                            print = function() { __p += __j.call(arguments, ''); };
+
+                        with (obj || {}) {
+                            __p += 'The number is ' +
+                                ((__t = ( a )) == null ? '' : _.escape(__t)) +
+                                '';
+                        }
+
+                        return __p;
+                    }
+                    ```
+                    <!-- .element: class="fragment" data-fragment-index="2"  -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    # function 
+
+                    string => function => html_string / dom <!-- .element: class="fragment" -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    string => function
+
+                    ```js
+                    'The number is ${a}'
+                    =>
+                    "var __t, __p = '' ... return __p;"
+                    =>
+                    new Function('obj', source)
+                    ```
+                    <!-- .element: class="fragment" -->
+
+                    string => function_string => function <!-- .element: class="fragment" -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    function => string
+
+                    字符串拼接
+                    <!-- .element: class="fragment" -->
+
+                    function => dom
+                    <!-- .element: class="fragment" -->
+
+                    virtual-dom
+                    <!-- .element: class="fragment" -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    string => function_string => function => virtual_dom => dom
+
+                    <div class="brace-wrapper fragment">
+                        <div class="brace">{</div>
+                        <div class="text">vdt</div>
+                    </div>
+                    <div class="brace-wrapper fragment">
+                        <div class="brace">{</div>
+                        <div class="text">virtual-dom</div>
+                    </div>
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## compile
+                    
+                    RegExp <!-- .element: class="fragment" -->
+
+                    AST <!-- .element: class="fragment" -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    RegExp
+
+                    ```js
+                    text.replace(
+                        /<%-([\s\S]+?)%>|<%=([\s\S]+?)%>|<%([\s\S]+?)%>|$/g, 
+                        function(match, escape, interpolate, evaluate, offset
+                    ) {
+                        source += text.slice(index, offset).replace(escaper, escapeChar);
+                        index = offset + match.length;
+
+                        if (escape) {
+                            source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
+                        } else if (interpolate) {
+                            source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
+                        } else if (evaluate) {
+                            source += "';\n" + evaluate + "\n__p+='";
+                        }
+
+                        // Adobe VMs need the match returned to produce the correct offest.
+                        return match;
+                    });
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    RegExp
+                    ```js
+                    <% if (a) { %>The number is <%- a %><% } %>
+                    =>
+                    __p += '';
+                    if (a) { 
+                        __p += 'The number is '+
+                            ((__t = ( a )) == null ? '' : _.escape(__t)) +
+                            '';
+                    } 
+                    __p += '';
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## virtual dom
+                    
+                    1. [virtual-dom](https://github.com/Matt-Esch/virtual-dom)
+                    2. [snabbdom](https://github.com/snabbdom/snabbdom)
+                    3. [misstime](https://github.com/Javey/misstime)
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## virtual dom
+
+                    ```js
+                    createVNode(tag, props, children, className, key, ref)
+
+                    render(vNode)
+
+                    patch(lastVNode, nextVNode)
+                    ```
+                    <!-- .element: class="fragment" -->
+
+                    ```js
+                    <div class="test">hello {name}</div>
+                    
+                    =>
+
+                    createVNode('div', {className: test}, ['hello', name]);
+                    ```
+                    <!-- .element: class="fragment" -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    AST: Abstract Syntax Tree
+                    
+                    Lexical analysis & syntactic analysis
+                    <!-- .element: class="fragment" -->
+
+                    [esprima][demo]
+                    <!-- .element: class="fragment" -->
+
+                    [demo]: http://esprima.org/demo/parse.html?code=%2F%2F%20Life%2C%20Universe%2C%20and%20Everything%0Avar%20answer%20%3D%206%20*%207%3B%0A%0Afunction%20a()%20%7B%0A%09function%20b()%20%7B%0A%09%09return%201%3B%0A%09%7D%0A%09return%20b()%3B%0A%7D
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    Lexical analysis
+                    ```js
+                    var a = 1;
+                    <div>{a}</div>
+                    ```
+                    =>
+
+                    ```js
+                    [
+                        {
+                            "type": "Js",
+                            "value": "var a = 1;\n"
+                        },
+                        {
+                            "type": "Punctuator",
+                            "value": "<"
+                        },
+                        {
+                            "type": "Identifier",
+                            "value": "div"
+                        },
+                        {
+                            "type": "Punctuator",
+                            "value": ">"
+                        },
+                        {
+                            "type": "Punctuator",
+                            "value": "{"
+                        },
+                        {
+                            "type": "Js",
+                            "value": "a"
+                        },
+                        {
+                            "type": "Punctuator",
+                            "value": "<"
+                        },
+                        {
+                            "type": "Punctuator",
+                            "value": "/"
+                        },
+                        {
+                            "type": "Identifier",
+                            "value": "div"
+                        },
+                        {
+                            "type": "Punctuator",
+                            "value": ">"
+                        }
+                    ]
+                    ```
+                </script>
+            </section>
+            <section>
+                <p>Syntactic analysis</p>
+                <pre><code>var a = 1;
+&lt;div&gt;{a}&lt;/div&gt;</code></pre>
+                <pre><code>Vdt.parser.parse() =></code></pre>
+                <pre><code class="lang-js">[
+    {
+        "value": "var a = 1;\n",
+        "type": 0,
+        "typeName": "JS"
+    },
+    {
+        "type": 2,
+        "typeName": "JSXElement",
+        "value": "div",
+        "attributes": [],
+        "children": [
+            {
+                "value": [
+                    {
+                        "value": "a",
+                        "type": 0,
+                        "typeName": "JS"
+                    }
+                ],
+                "type": 3,
+                "typeName": "JSXExpressionContainer"
+            }
+        ]
+    }
+]</code></pre>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    Visitor
+
+                    AST => function_string
+                    <!-- .element: class="fragment" -->
+                    ```
+                    Vdt.stringifier.stringfy(ast) =>
+                    ```
+                    <!-- .element: class="fragment" -->
+                    ```
+                    var a = 1;
+                    return h('div', null, [a])
+                    ```
+                    <!-- .element: class="fragment" -->
+
+                    ```
+                    Vdt.compile(source) =>
+                    ```
+                    <!-- .element: class="fragment" -->
+
+                    ```js
+                    function(obj, _Vdt, blocks) {
+                        _Vdt || (_Vdt = Vdt);
+                        obj || (obj = {});
+                        blocks || (blocks = {});
+                        var h = _Vdt.virtualDom.h, widgets = this && this.widgets || {},
+                            _blocks = {}, __blocks = {},
+                            extend = _Vdt.utils.extend, self = this.data, scope = obj;
+                        with (obj) {
+                            var a = 1;
+                            return h('div',null, [a])
+                        }
+                    }
+                    ```
+                    <!-- .element: class="fragment" -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    Visitor
+
+                    ```js
+                    _visit: function(element, isRoot) {
+                        element = element || {};
+                        switch (element.type) {
+                            case Type.JS:
+                                return this._visitJS(element);
+                            case Type.JSXElement:
+                                return this._visitJSX(element);
+                            ...
+                            default:
+                                return 'null';
+                        }
+                    },
+
+                    _visitJSXElement: function(element) {
+                        return "h('" + element.value + "'," + this._visitJSXAttribute(element.attributes) + ", " + 
+                            this._visitJSXChildren(element.children) + ')';
+                    }
+                    ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    function => dom 
+
+                    ```js
+                    var vdt = Vdt(template | source);
+
+                    vdt.render({a: 1});
+                    vdt.update({a: 2});
+                    ```
+                    <!-- .element: class="fragment" -->
+
+                    ```js
+                    // render
+                    var vNode = template.call(vdt, data);
+                    var node = render(vNode);
+
+                    // update
+                    var newVNode = template.call(vdt, newData);
+                    var node = patch(oldVNode, newVNode);
+                    ```
+                    <!-- .element: class="fragment" -->
+                </script>
+            </section>
+        </section>
+        <section class="stack">
+            <section data-markdown>
+                <script type="text/template">
+                    Extend
+
+                    ```js
+                    <div>
+                        <b:container>
+                            <b:header>
+                                <h1>parent header</h1>
+                            </b:header>
+                            <b:body>
+                                <div>parent body</div>
+                            </b:body>
+                        </b:container>
+                    </div>
+                    ```
+                    <!-- .element: class="fragment" -->
+
+                    ```js
+                    var layout = require('parent.vdt');
+
+                    <t:layout>
+                        <b:body>
+                            <div>child body</div>
+                            {parent()}
+                        </b:body>
+                    </t:layout>
+                    ```
+                    <!-- .element: class="fragment" -->
+
+                    ```html
+                    <div>
+                        <h1>parent header</h1>
+                        <div>child body</div>
+                        <div>parent body</div>
+                    </div>
+                    ```
+                    <!-- .element: class="fragment" -->
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    Extend
+
+                    ```js
+                    // parent template
+                    var layout = function(blocks) {
+                        var _blocks = {}, __blocks = {};
+                        _blocks.body = function() {
+                            return 'parent body';
+                        };
+                        __blocks.body = function() {
+                            return blocks.body(_blocks.body);
+                        };
+                        return __blocks.body();
+                    };
+
+                    // child template
+                    var _blocks = {};
+                    _blocks.body = function(parent) {
+                        return 'child body ' + parent();
+                    };
+                    
+                    layout(_blocks); // child body parent body
+                    ```
+                </script>
+            </section>
+            <section>
+                <p>Extend</p>
+                <pre><code class="lang-js">// parent template
+function(obj, _Vdt, blocks) {
+    _Vdt || (_Vdt = Vdt);
+    obj || (obj = {});
+    blocks || (blocks = {});
+    var h = _Vdt.virtualDom.h, widgets = this && this.widgets || {}, _blocks = {}, __blocks = {},
+        extend = _Vdt.utils.extend, self = this.data, scope = obj;
+    with (obj) {
+        return h('div', null, ['\n    ', (_blocks.container = function(parent) {
+            return ['\n        ', (_blocks.header = function(parent) {
+                return ['\n            ', h('h1', null, ['parent header']), '\n        '];
+            }) && (__blocks.header = function(parent) {
+                var self = this;
+                return blocks.header ? blocks.header.call(this, function() {
+                    return _blocks.header.call(self, parent);
+                }) : _blocks.header.call(this, parent);
+            }) && __blocks.header.call(this), '\n        ', (_blocks.body = function(parent) {
+                return ['\n            ', h('div', null, ['parent body']), '\n        '];
+            }) && (__blocks.body = function(parent) {
+                var self = this;
+                return blocks.body ? blocks.body.call(this, function() {
+                    return _blocks.body.call(self, parent);
+                }) : _blocks.body.call(this, parent);
+            }) && __blocks.body.call(this), '\n    '];
+        }) && (__blocks.container = function(parent) {
+            var self = this;
+            return blocks.container ? blocks.container.call(this, function() {
+                return _blocks.container.call(self, parent);
+            }) : _blocks.container.call(this, parent);
+        }) && __blocks.container.call(this), '\n'])
+    }
+}
+
+// child parent
+function(obj, _Vdt, blocks) {
+    _Vdt || (_Vdt = Vdt);
+    obj || (obj = {});
+    blocks || (blocks = {});
+    var h = _Vdt.virtualDom.h, widgets = this && this.widgets || {}, _blocks = {}, __blocks = {},
+        extend = _Vdt.utils.extend, self = this.data, scope = obj;
+    with (obj) {
+        return (function(blocks) {
+            var _blocks = {}, __blocks = extend({}, blocks), _obj = null || {};
+            return layout.call(this, _obj, _Vdt, (_blocks.body = function(parent) {
+                    return ['\n        ', h('div',null, ['child body']), '\n        ', parent(), '\n    '];}
+                ) && (__blocks.body = function(parent) {
+                    var self = this;
+                    return blocks.body ? blocks.body.call(this, function() {
+                        return _blocks.body.call(self, parent);
+                    }) : _blocks.body.call(this, parent);
+                }) && __blocks)
+        }).call(this, blocks)
+    }
+}</code></pre>
+                </script>
+            </section>
+        </section>
+        <section class="stack">
+            <section data-markdown>
+                <script type="text/template">
+                    1. Vdt中 `this`, `self`, `scope`
+                    2. 去掉 `with`
+                        ```js
+                        Vdt.compile(templateString, {noWith: true});
+                        ```
+                    3. 保留字 `parent`
+                    4. 只有最后一个元素被返回
+                    4. `{}`中只能写表达式（右值）
+                    5. `v-if`, `v-for` 语法糖
+                    6. 以大写字母开头的元素都会编译成函数调用
+                        ```
+                        <Slider value="1" />
+                        => 
+                        Slider({value: "1"})
+                        ```
+                    7. 模板开头可以书写任意js代码
+                    8. 由于类似`<a`这样的字符串会被当做元素，所以小于判断必须加空格`1 < a`
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    this & self & scope
+
+                    ```js
+                    function(obj, _Vdt, blocks) { }
+                    ```
+                    <!-- .element: class="fragment" -->
+
+                    1. this 指向vdt实例 <!-- .element: class="fragment" -->
+                        ```js
+                        vdt.template.call(vdt, vdt.data, Vdt)
+                        ```
+                    2. scope 指向传入模板函数的实参 <!-- .element: class="fragment" -->
+                        ```js
+                        scope = obj
+                        ```
+                        ```js
+                        // <t:layout region="beijing" />
+                        var _blocks = {}, __blocks = extend({}, blocks), 
+                            _obj = {region: "beijing"} || {};
+                        return layout.call(this, _obj, _Vdt, ...)
+                        ```
+                    3. self 指向渲染到模板的数据 <!-- .element: class="fragment" -->
+                        ```js
+                        self = this.data; // vdt.data
+                        ```
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    可变元素
+
+                    ```js
+                    <Button tagName="button">Click</Button>
+                    <Button tagName="a">Click</Button>
+                    =>
+                    <button>Click</button>
+                    <a>Click</a>
+                    ```
+                    <!-- .element: class="fragment" -->
+
+                    ```js
+                    var h = _Vdt.virtualDom.h;
+                    h('div', {className: 'a'}, ['text']);
+                    ```
+                    <!-- .element: class="fragment" -->
+
+                    ```js
+                    var Button = function(attrs) {
+                        return h(scope.tagName || 'a', attrs, attrs.children);
+                    };
+
+                    <Button class={{ scope.className }}>
+                        {{ scope.children }}
+                    </Button>
+                    ```
+                    <!-- .element: class="fragment" -->
+                </script>
+            </section>
+        </section>
+        <section class="stack">
+            <section data-markdown>
+                <script type="text/template">
+                    ## Intact 
+
+                    ```js
+                    Intact.extend({
+                        defaults: {},
+                        template: template
+                    })
+                    ```
+                    <!-- .element: class="fragment" -->
+                    ```js
+                    // constructor
+                    this.vdt = Vdt(this.template);
+                    this._init();
+                    this.on('change', this.update); // update automatically
+
+                    // init
+                    this.element = this.vdt.render(this);
+                    this._create();
+
+                    // update
+                    this.element = this.vdt.update(this);
+                    this._update();
+                    ```
+                    <!-- .element: class="fragment" -->
+                </script>
+            </section>
+        </section>
+        <section>
+            <p>Q&A</p>
+        </section>
+    </div>
+</div>
+<script type="text/javascript" src="bower_components/reveal.js/lib/js/head.min.js"></script>
+<script type="text/javascript" src="bower_components/reveal.js/js/reveal.js"></script>
+<script type="text/javascript">
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'slide',
+        dependencies: [
+            { src: 'bower_components/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+            { src: 'bower_components/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            { src: 'bower_components/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            { src: 'bower_components/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+            { src: 'bower_components/reveal.js/plugin/notes/notes.js' }
+        ]
+    });
+</script>
+<script type="text/javascript" src="vdt.js"></script>
+<script type="text/javascript" src="static/js/misstime.js"></script>
+<script>
+    var p = new Parser();
+    var ast = p.parse('<div class="test">Hello {name}!</div>');
+    console.log(ast);
+
+    var s = new Stringifier();
+    var result = s.stringify(ast);
+    console.log(result);
+
+</script>
+</body>
+</html>
